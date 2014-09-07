@@ -1,0 +1,7 @@
+This is a work in progress of our blood donation app which we built for a hackathon. Currently I've managed to get a Mongo instance up and working and have implemented basic user data capture functionality. 
+
+What still needs to done from an app standpoint is 
+
+1) get GCM back. The old app was too hastily done and is virtually unsalvageable
+2) implement shared preferences to stop users from having to log in everytime
+
