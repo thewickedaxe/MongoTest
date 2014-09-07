@@ -51,7 +51,25 @@ public class MainActivity extends Activity
 	        DBCollection usercreds = db.getCollection("usercreds");        
 	        usercreds.insert(seedData);
 	 }
-	        
+	public static int checkInDb(Context now, String usern) throws UnknownHostException
+	{
+		        // Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname
+		       int exist=0;
+		    MongoClientURI uri  = new MongoClientURI("mongodb://admin:blood1@ds035240.mongolab.com:35240/userdata"); 
+		    MongoClient client = new MongoClient(uri);
+		    DB db = client.getDB(uri.getDatabase());	   
+		    DBCollection usercreds = db.getCollection("usercreds");        
+	        DBCursor docs = usercreds.find();
+	        while(docs.hasNext())
+	        {
+	            DBObject doc = docs.next();
+	            String u=doc.get("username")+"";
+	            if(u.equals(usern))
+	            exist=1;
+	        }
+	        return exist;
+	            
+	}
 	public static void putInDb2(Context now,String usern, String passw) throws UnknownHostException
 	{
 		        // Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname
@@ -172,10 +190,17 @@ public class MainActivity extends Activity
 						message2.show();
 			        	return;
 			        }
-			        Toast message=Toast.makeText(now, "Putting in DB", Toast.LENGTH_LONG);
+			        if(checkInDb(now,usern)==1)
+			        {
+			        	Toast message=Toast.makeText(now,"Username taken, please choose another username",Toast.LENGTH_SHORT);
+			        	message.show();
+			        	return;
+			        }
+			        Toast message=Toast.makeText(now, "Signing you up..Just a moment", Toast.LENGTH_LONG);
 					message.show();
 					putInDb(now);
 					Log.wtf("DB Connection","Done");
+					logHimIn();
 				} catch (UnknownHostException e)
 				{
 					// TODO Auto-generated catch block
